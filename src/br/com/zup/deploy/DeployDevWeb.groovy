@@ -12,7 +12,7 @@ class DeployDevWeb {
             jenkins.node(jenkins.POD_LABEL){
                 jenkins.container('jnlp'){
                     try{
-                        jenkins.withCredentials([jenkins.string(credentialsId: 'aws-credential', variable: 'aws-s3')]) {
+                        jenkins.withAWS(credentials: 'aws-credential') {
                             jenkins.s3Upload(bucket:"http://sample-app-flutter.s3-website-sa-east-1.amazonaws.com", path:'', includePathPattern:'**/*', workingDir:'build/web', excludePathPattern:'**/*.svg,**/*.jpg')
                         }
                     }
