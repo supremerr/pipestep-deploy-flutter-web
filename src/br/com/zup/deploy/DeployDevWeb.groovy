@@ -21,7 +21,7 @@ class DeployDevWeb {
                 jenkins.container('flutter'){
                     try{
                         jenkins.sh label: "Deploy flutter web", 
-                                script: "s3Upload(bucket:'sample-app-flutter.s3-website-sa-east-1.amazonaws.com', includePathPattern:'**/*', workingDir:'/build/web')"
+                                script: "s3Upload(bucket:\"http://sample-app-flutter.s3-website-sa-east-1.amazonaws.com\", path:'/build/web', includePathPattern:'**/*', workingDir:'/build/web', excludePathPattern:'**/*.svg,**/*.jpg')"
                     }
                     catch(Exception e){
                         jenkins.unstable("An error occured during deploy step. Please, verify the logs.")
