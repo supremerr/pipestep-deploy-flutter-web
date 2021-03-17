@@ -47,7 +47,7 @@ class DeployDevWeb {
                             jenkins.sh label: "S3 Create Bucket Policy", 
                             script: "aws s3api put-bucket-policy --bucket ${bucketName}.dev.iupp.io --policy file://policy.json"
 
-                        } catch{
+                        } catch(Exception e){
                             jenkins.echo "Não foi necessária a ciração do bucket"
                         }
                         jenkins.withAWS(credentials: 'aws-credential') {
