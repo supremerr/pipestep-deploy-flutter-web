@@ -6,7 +6,7 @@ class DeployDevWeb {
         
         jenkins.podTemplate(
             containers: [
-                containerTemplate(
+                jenkins.containerTemplate(
                     name: 'aws-cli', 
                     image: 'amazon/aws-cli:2.1.30', 
                     ttyEnabled: true, 
