@@ -40,15 +40,17 @@ class DeployDevWeb {
                     def bucketPolicyFile = jenkins.writeJSON file: 'policy.json', json: bucketPolicy
                     try{
                         try{
-                            jenkins.sh label: "S3 Create Bucket", 
-                            script: "aws s3api create-bucket --bucket ${bucketName}.dev.iupp.io --region sa-east-1 --create-bucket-configuration LocationConstraint=sa-east-1 --acl public-read"
-                            jenkins.sh label: "S3 Create Website", 
-                            script: "aws s3 website s3://${bucketName}.dev.iupp.io --index-document index.html"
-                            jenkins.sh label: "S3 Create Bucket Policy", 
-                            script: "aws s3api put-bucket-policy --bucket ${bucketName}.dev.iupp.io --policy file://policy.json"
+                            jenkins.withAWS(credentials: 'aws-credential') {
+                                jenkins.sh label: "S3 Create Bucket", 
+                                script: "aws s3api create-bucket --bucket ${bucketName}.dev.iupp.io --region sa-east-1 --create-bucket-configuration LocationConstraint=sa-east-1 --acl public-read"
+                                jenkins.sh label: "S3 Create Website", 
+                                script: "aws s3 website s3://${bucketName}.dev.iupp.io --index-document index.html"
+                                jenkins.sh label: "S3 Create Bucket Policy", 
+                                script: "aws s3api put-bucket-policy --bucket ${bucketName}.dev.iupp.io --policy file://policy.json"
+                            }
 
                         } catch(Exception e){
-                            jenkins.echo "Não foi necessária a ciração do bucket"
+                            jenkins.echo "Não foi necessária a criação do bucket"
                         }
                         jenkins.withAWS(credentials: 'aws-credential') {
                             jenkins.s3Upload(bucket:"${bucketName}.dev.iupp.io", path:'', includePathPattern:'**/*', workingDir:'build/web', excludePathPattern:'**/*.svg,**/*.jpg')
